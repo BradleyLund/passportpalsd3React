@@ -1,16 +1,18 @@
 import React from 'react';
 import ChoroplethMap from './ChoroplethMap';
-import ChoroplethMapSelect from './ChoroplethMapSelect';
-import SelectComponent from './SelectComponent';
+import SelectBoxComponent from './SelectBoxComponent';
+import ParentComponent from './ParentComponentSelectAndMap';
 
 function App() {
   return (
     <div className="App">
-      <SelectComponent />
+
+      <ParentComponent />
+
+      {/* <SelectBoxComponent />
       <h1>Choropleth Map</h1>
-      <ChoroplethMap />
- 
-      <ChoroplethMapSelect />
+      <ChoroplethMap /> */}
+
 
 
     </div>
