@@ -9,7 +9,7 @@ function App() {
       <SelectComponent />
       <h1>Choropleth Map</h1>
       <ChoroplethMap />
-
+ 
       <ChoroplethMapSelect />
 
 
