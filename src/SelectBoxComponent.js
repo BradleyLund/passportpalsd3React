@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Trash, Plus } from "lucide-react";
 
 // List of all countries in the world
 const countries = [
@@ -212,12 +213,13 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
   };
 
   return (
-    <div>
+    <div className="containerColumn">
       {selectedCountries.map((country, index) => (
-        <div key={index}>
+        <div key={index} className="container">
           <select
             value={country}
             onChange={(e) => onSelectChange(index, e.target.value)}
+            className="button-17"
           >
             {countries.map((country, idx) => (
               <option key={idx} value={country}>
@@ -225,18 +227,18 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
               </option>
             ))}
           </select>
-          <button onClick={() => removeSelectBox(index)}>Remove</button>
+          <button
+            // className="button-remove"
+            className="button-remove"
+            onClick={() => removeSelectBox(index)}
+          >
+            <Trash size={24} />
+          </button>
         </div>
       ))}
-      <button onClick={addSelectBox}>+</button>
-      <div className="mt-4 text-sm text-gray-600">
-        <h3 className="font-medium text-lg mb-2">Selected Countries:</h3>
-        {selectedCountries.map((selection, index) => (
-          <p key={index}>
-            Selection {index + 1}: {selection || "None"}
-          </p>
-        ))}
-      </div>
+      <button className="button-add" onClick={addSelectBox}>
+        <Plus />
+      </button>
     </div>
   );
 };

@@ -18,12 +18,12 @@ const ParentComponent = () => {
   };
 
   return (
-    <div>
+    <div className="containerPage">
+      <ChoroplethMap selectedCountries={selectedCountries} />
       <SelectBoxComponent
         selectedCountries={selectedCountries}
         onSelectChange={handleSelectChange}
       />
-      <ChoroplethMap selectedCountries={selectedCountries} />
     </div>
   );
 };
