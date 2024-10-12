@@ -201,12 +201,14 @@ const countries = [
 
 const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
   const addSelectBox = () => {
-    onSelectChange(selectedCountries.length, "Afghanistan");
+    onSelectChange(selectedCountries.length, "Afghanistan", false);
   };
 
   const removeSelectBox = (index) => {
     const updatedCountries = selectedCountries.filter((_, i) => i !== index);
-    onSelectChange(updatedCountries);
+    console.log("in remove function", index);
+    console.log(updatedCountries);
+    onSelectChange(index, updatedCountries, true);
   };
 
   return (
