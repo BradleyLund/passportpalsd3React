@@ -12,13 +12,23 @@ body {
   margin: 0;
 }
 
+svg {
+  border: #3c4043;
+}
+
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   /* flex-direction: column; */
   /* border: 1px solid black; */
-  padding: 20px;
+  padding: 5px;
+}
+
+.resultsTable {
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
 }
 
 .containerColumn {
@@ -58,13 +68,13 @@ code {
   /* display: inline-flex; */
   fill: currentcolor;
   font-family: "Google Sans", Roboto, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   height: 48px;
   justify-content: center;
   letter-spacing: 0.25px;
   line-height: normal;
-  max-width: 100%;
+  max-width: 50%;
   /* margin-top: 20px; */
   overflow: visible;
   /* padding: 2px 24px; */

@@ -200,7 +200,7 @@ const countryCodesObject = {
   Zimbabwe: "ZWE",
 };
 
-const ChoroplethMap = ({ selectedCountries }) => {
+const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
   const svgRef = useRef();
 
   useEffect(() => {
@@ -258,7 +258,6 @@ const ChoroplethMap = ({ selectedCountries }) => {
       .then((response) => response.text())
       .then((csvData) => {
         visaData = parseCSVData(csvData);
-
         const svg = d3
           .select(svgRef.current)
           .attr("width", 800)
@@ -303,7 +302,7 @@ const ChoroplethMap = ({ selectedCountries }) => {
           visaRequirementPossibilities.sort();
 
           let sortedVisaRequirements = [
-            "-1",
+            "Selected Country",
             null,
             "no admission",
             "covid ban",
@@ -365,6 +364,9 @@ const ChoroplethMap = ({ selectedCountries }) => {
           console.log(allCountriesArray);
 
           combinedVisaReqs = getCombinedVisaReqs(...allCountriesArray);
+          console.log(combinedVisaReqs);
+
+          setCombinedVisaReqs(combinedVisaReqs);
 
           for (let i = 0; i < data.features.length; i++) {
             data.features[i].properties.value =
@@ -382,7 +384,7 @@ const ChoroplethMap = ({ selectedCountries }) => {
           var colorScale = d3
             .scaleOrdinal()
             .domain([
-              "-1",
+              "Selected Country",
               null,
               "no admission",
               "covid ban",
@@ -440,9 +442,8 @@ const ChoroplethMap = ({ selectedCountries }) => {
 
           const showTooltip = (event, d) => {
             // Hide any existing tooltip
-            if (activeTooltip != d) {
-              hideTooltip(activeTooltip);
-            }
+
+            hideTooltip(activeTooltip);
 
             let name = "";
             for (const property in countryCodesObject) {
@@ -468,10 +469,8 @@ const ChoroplethMap = ({ selectedCountries }) => {
 
           const hideTooltip = (d) => {
             console.log(d);
-            if (activeTooltip === d) {
-              tooltip.transition().duration(500).style("opacity", 0);
-              activeTooltip = null;
-            }
+            tooltip.transition().duration(500).style("opacity", 0);
+            activeTooltip = null;
           };
 
           svg
@@ -485,7 +484,8 @@ const ChoroplethMap = ({ selectedCountries }) => {
               // console.log(d.properties.value, d.properties);
               return colorScale(d.properties.value);
             })
-            .attr("stroke", "grey")
+            .attr("stroke", "white")
+            .attr("stroke-width", "0.1")
             .on("mouseover", showTooltip)
             .on("mouseout", hideTooltip)
             .on("click", (event, d) => {
@@ -496,13 +496,6 @@ const ChoroplethMap = ({ selectedCountries }) => {
                 showTooltip(event, d);
               }
             });
-
-          // Close tooltip when clicking outside of a country
-          // svg.on("click", () => {
-          //   if (activeTooltip) {
-          //     hideTooltip(activeTooltip);
-          //   }
-          // });
         });
       })
       .catch((error) => console.error("Error fetching CSV data:", error));
