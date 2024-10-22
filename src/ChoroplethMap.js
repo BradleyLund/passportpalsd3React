@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 const countryCodesObject = {
@@ -202,14 +202,34 @@ const countryCodesObject = {
 
 const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
   const svgRef = useRef();
+  const containerRef = useRef();
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // Add resize listener
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.clientWidth;
+        // Maintain aspect ratio of 4:3
+        const height = width * 0.75;
+        setDimensions({ width, height });
+      }
+    };
+
+    window.addEventListener("resize", updateDimensions);
+    updateDimensions(); // Initial dimension set
+
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
   useEffect(() => {
+    if (dimensions.width === 0) return;
     // Clear the existing SVG content
     d3.select(svgRef.current).selectAll("*").remove();
 
     // Call the function to render the map
     renderMap();
-  }, [selectedCountries]);
+  }, [selectedCountries, dimensions]);
 
   const renderMap = () => {
     const selectedCountryCodes = [];
@@ -226,7 +246,8 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
       .style("border-radius", "4px")
       .style("padding", "10px")
       .style("font-size", "12px")
-      .style("pointer-events", "none");
+      .style("pointer-events", "none")
+      .style("z-index", "1000"); // Ensure tooltip appears above map;
 
     for (let i = 0; i < selectedCountries.length; i++) {
       selectedCountryCodes.push(countryCodesObject[selectedCountries[i]]);
@@ -234,7 +255,8 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
 
     // Function to parse CSV data into arrays and objects
     function parseCSVData(csvData) {
-      const lines = csvData.split("\r\n");
+      const lines = csvData.split("\n");
+      console.log(lines);
       const headers = lines[0].split(",");
       const data = [];
 
@@ -257,11 +279,15 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
     fetch("/passport-index-tidy-iso3.csv")
       .then((response) => response.text())
       .then((csvData) => {
+        // console.log(csvData);
+
         visaData = parseCSVData(csvData);
         const svg = d3
           .select(svgRef.current)
-          .attr("width", 800)
-          .attr("height", 600);
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`)
+          .attr("preserveAspectRatio", "xMidYMid meet");
 
         // Your D3.js code to create the choropleth map goes here
         // For example, loading GeoJSON data and drawing the map
@@ -373,10 +399,15 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
               combinedVisaReqs[data.features[i].properties.A3];
           }
 
+          // const projection = d3
+          //   .geoMercator()
+          //   .scale(130)
+          //   .translate([800 / 2, 600 / 1.5]);
+
           const projection = d3
             .geoMercator()
-            .scale(130)
-            .translate([800 / 2, 600 / 1.5]);
+            .fitSize([dimensions.width, dimensions.height], data)
+            .translate([dimensions.width / 2, dimensions.height / 1.5]);
           // Create a path generator using the projection
           var path = d3.geoPath().projection(projection);
 
@@ -412,9 +443,9 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
             ]) // Your specific values
             .range([
               "#002377",
-              "red", //small edit
-              "red",
-              "red",
+              "gray", //small edit
+              "gray",
+              "gray",
               "#C0C0C0",
               "#61C7A1",
               "#B5E61D",
@@ -435,7 +466,7 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
               "#9EFF9E",
               "#9EFF9E",
               "#22B14C",
-              "red",
+              "#C0C0C0",
             ]);
 
           let activeTooltip = null;
@@ -444,6 +475,12 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
             // Hide any existing tooltip
 
             hideTooltip(activeTooltip);
+
+            const isMobile = window.innerWidth < 768;
+            const tooltipX = isMobile
+              ? Math.min(event.pageX, window.innerWidth - 200)
+              : event.pageX + 10;
+            const tooltipY = isMobile ? event.pageY - 100 : event.pageY - 28;
 
             let name = "";
             for (const property in countryCodesObject) {
@@ -461,8 +498,8 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
               ISO Code: ${d.properties.A3}
             `
               )
-              .style("left", event.pageX + 10 + "px")
-              .style("top", event.pageY - 28 + "px");
+              .style("left", tooltipX + "px")
+              .style("top", tooltipY + "px");
 
             activeTooltip = d;
           };
@@ -488,20 +525,38 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
             .attr("stroke-width", "0.1")
             .on("mouseover", showTooltip)
             .on("mouseout", hideTooltip)
-            .on("click", (event, d) => {
-              event.stopPropagation(); // Prevent the click from bubbling up
-              if (activeTooltip === d) {
-                hideTooltip();
-              } else {
-                showTooltip(event, d);
-              }
-            });
+            // .on("click", (event, d) => {
+            //   event.stopPropagation(); // Prevent the click from bubbling up
+            //   if (activeTooltip === d) {
+            //     hideTooltip();
+            //   } else {
+            //     showTooltip(event, d);
+            //   }
+            // })
+            .on("touchstart", (event, d) => {
+              event.preventDefault();
+              showTooltip(event.touches[0], d);
+            })
+            .on("touchend", hideTooltip);
         });
       })
       .catch((error) => console.error("Error fetching CSV data:", error));
   };
 
-  return <svg ref={svgRef}></svg>;
+  return (
+    <div
+      ref={containerRef}
+      className="w-full h-full flex items-center justify-center"
+      style={{
+        minHeight: "300px",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "1rem",
+      }}
+    >
+      <svg ref={svgRef}></svg>
+    </div>
+  );
 };
 
 export default ChoroplethMap;

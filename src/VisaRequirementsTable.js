@@ -421,115 +421,75 @@ const VisaRequirementsTable = ({ combinedVisaReqs }) => {
       return !isNaN(number) && number > 0;
     }
   );
+  const renderCountryRows = (countries) => {
+    return countries.map(([country, requirement]) => {
+      const countryCode =
+        countryCodesObject[reversedCountryCodesObject[country]];
+      return (
+        <tr key={country} className="border-b border-gray-200 last:border-0">
+          <td className="px-4 py-2">
+            {countryCode && (
+              <span className={`fi fi-${countryCode.toLowerCase()}`}></span>
+            )}
+            {" " + reversedCountryCodesObject[country]}
+          </td>
+        </tr>
+      );
+    });
+  };
 
   return (
-    <div className="resultsTable">
-      <table>
-        <thead>
-          <tr>
-            <th>Pals Passports</th>
-          </tr>
-        </thead>
-        <tbody>
-          {selectedCountries.map(([country, requirement]) => {
-            const countryCode =
-              countryCodesObject[reversedCountryCodesObject[country]];
+    <div className="max-w-6xl mx-auto p-6">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          {/* Pals Passports Section */}
+          <div className="border-b md:border-r lg:border-r border-gray-200">
+            <div className="bg-blue-50 px-6 py-3">
+              <h2 className="font-semibold text-lg text-blue-800">
+                Pals Passports
+              </h2>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {renderCountryRows(selectedCountries)}
+            </div>
+          </div>
 
-            return (
-              <tr key={country}>
-                <td>
-                  {countryCode && (
-                    <span
-                      className={`fi fi-${countryCode.toLowerCase()}`}
-                    ></span>
-                  )}
-                  {" " + reversedCountryCodesObject[country]}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <tr>
-            <th>Visa Free</th>
-          </tr>
-        </thead>
-        <tbody>
-          {visaFreeCountries.map(([country, requirement]) => {
-            const countryCode =
-              countryCodesObject[reversedCountryCodesObject[country]];
+          {/* Visa Free Section */}
+          <div className="border-b lg:border-r border-gray-200">
+            <div className="bg-green-50 px-6 py-3">
+              <h2 className="font-semibold text-lg text-green-800">
+                Visa Free
+              </h2>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {renderCountryRows(visaFreeCountries)}
+            </div>
+          </div>
 
-            return (
-              <tr key={country}>
-                <td>
-                  {countryCode && (
-                    <span
-                      className={`fi fi-${countryCode.toLowerCase()}`}
-                    ></span>
-                  )}
-                  {" " + reversedCountryCodesObject[country]}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <tr>
-            <th>eVisa</th>
-          </tr>
-        </thead>
-        <tbody>
-          {eVisaCountries.map(([country, requirement]) => {
-            const countryCode =
-              countryCodesObject[reversedCountryCodesObject[country]];
+          {/* eVisa Section */}
+          <div className="border-b md:border-r lg:border-b-0 border-gray-200">
+            <div className="bg-purple-50 px-6 py-3">
+              <h2 className="font-semibold text-lg text-purple-800">eVisa</h2>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {renderCountryRows(eVisaCountries)}
+            </div>
+          </div>
 
-            return (
-              <tr key={country}>
-                <td>
-                  {countryCode && (
-                    <span
-                      className={`fi fi-${countryCode.toLowerCase()}`}
-                    ></span>
-                  )}
-                  {" " + reversedCountryCodesObject[country]}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <tr>
-            <th>Visa On Arrival</th>
-          </tr>
-        </thead>
-        <tbody>
-          {visaOnArrivalCountries.map(([country, requirement]) => {
-            const countryCode =
-              countryCodesObject[reversedCountryCodesObject[country]];
-
-            return (
-              <tr key={country}>
-                <td>
-                  {countryCode && (
-                    <span
-                      className={`fi fi-${countryCode.toLowerCase()}`}
-                    ></span>
-                  )}
-                  {" " + reversedCountryCodesObject[country]}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+          {/* Visa On Arrival Section */}
+          <div>
+            <div className="bg-amber-50 px-6 py-3">
+              <h2 className="font-semibold text-lg text-amber-800">
+                Visa On Arrival
+              </h2>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {renderCountryRows(visaOnArrivalCountries)}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
-
 export default VisaRequirementsTable;
