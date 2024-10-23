@@ -407,7 +407,12 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
           const projection = d3
             .geoMercator()
             .fitSize([dimensions.width, dimensions.height], data)
-            .translate([dimensions.width / 2, dimensions.height / 1.5]);
+            .translate([dimensions.width / 2, dimensions.height / 2])
+            .clipExtent([
+              [0, 0],
+              [dimensions.width, dimensions.height * 0.8],
+            ]); // Added clipExtent to cut off bottom portion
+
           // Create a path generator using the projection
           var path = d3.geoPath().projection(projection);
 
@@ -534,10 +539,11 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
             //   }
             // })
             .on("touchstart", (event, d) => {
+              hideTooltip();
               event.preventDefault();
               showTooltip(event.touches[0], d);
-            })
-            .on("touchend", hideTooltip);
+            });
+          // .on("touchend", hideTooltip);
         });
       })
       .catch((error) => console.error("Error fetching CSV data:", error));
@@ -551,7 +557,7 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
         minHeight: "300px",
         maxWidth: "1200px",
         margin: "0 auto",
-        padding: "1rem",
+        padding: "0.25rem",
       }}
     >
       <svg ref={svgRef}></svg>

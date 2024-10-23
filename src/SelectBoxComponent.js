@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Trash, Plus } from "lucide-react";
+import { Trash, Plus, Shuffle } from "lucide-react";
 
 // List of all countries in the world
 const countries = [
@@ -406,9 +406,14 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
 
   const removeSelectBox = (index) => {
     const updatedCountries = selectedCountries.filter((_, i) => i !== index);
-    console.log("in remove function", index);
-    console.log(updatedCountries);
+
     onSelectChange(index, updatedCountries, true);
+  };
+
+  const randomizeSelectBox = (index) => {
+    let randomIndex = Math.floor(Math.random() * countries.length);
+    let randomOption = countries[randomIndex];
+    onSelectChange(index, randomOption, false, true);
   };
 
   return (
@@ -437,6 +442,12 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
             onClick={() => removeSelectBox(index)}
           >
             <Trash size={24} />
+          </button>
+          <button
+            className="button-remove"
+            onClick={() => randomizeSelectBox(index)}
+          >
+            <Shuffle />
           </button>
         </div>
       ))}
