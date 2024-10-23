@@ -211,7 +211,7 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
       if (containerRef.current) {
         const width = containerRef.current.clientWidth;
         // Maintain aspect ratio of 4:3
-        const height = width * 0.75;
+        const height = width * 0.65;
         setDimensions({ width, height });
       }
     };
@@ -447,7 +447,7 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
               undefined,
             ]) // Your specific values
             .range([
-              "#002377",
+              "#1E40AF",
               "gray", //small edit
               "gray",
               "gray",
@@ -554,10 +554,11 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
       ref={containerRef}
       className="w-full h-full flex items-center justify-center"
       style={{
-        minHeight: "300px",
+        minHeight: "250px",
         maxWidth: "1200px",
         margin: "0 auto",
         padding: "0.25rem",
+        marginBottom: "1rem",
       }}
     >
       <svg ref={svgRef}></svg>

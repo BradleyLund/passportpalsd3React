@@ -26,13 +26,15 @@ const ParentComponent = () => {
 
   return (
     <div className="containerPage">
-      <h1>
-        <strong>PassportPals</strong>
-      </h1>
-      <p>
-        See where you and your friends from all around the world can travel to
-        together, visa free.
-      </p>
+      <div className="text-center space-y-4 mb-8">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent py-2">
+          PassportPals
+        </h1>
+        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+          See where you and your friends from all around the world can travel to
+          together, visa free.
+        </p>
+      </div>
       <SelectBoxComponent
         selectedCountries={selectedCountries}
         onSelectChange={handleSelectChange}
