@@ -542,8 +542,8 @@ const ChoroplethMap = ({ selectedCountries, setCombinedVisaReqs }) => {
               hideTooltip();
               event.preventDefault();
               showTooltip(event.touches[0], d);
-            });
-          // .on("touchend", hideTooltip);
+            })
+            .on("touchend", hideTooltip);
         });
       })
       .catch((error) => console.error("Error fetching CSV data:", error));
