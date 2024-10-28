@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SelectBoxComponent from "./SelectBoxComponent";
 import ChoroplethMap from "./ChoroplethMap";
 import VisaRequirementsTable from "./VisaRequirementsTable";
+import LeafletMap from "./LeafLetMap";
 
 const ParentComponent = () => {
   const [selectedCountries, setSelectedCountries] = useState(["Afghanistan"]);
@@ -39,10 +40,15 @@ const ParentComponent = () => {
         selectedCountries={selectedCountries}
         onSelectChange={handleSelectChange}
       />
-      <ChoroplethMap
+      {/* <ChoroplethMap
+        selectedCountries={selectedCountries}
+        setCombinedVisaReqs={setCombinedVisaReqs}
+      /> */}
+      <LeafletMap
         selectedCountries={selectedCountries}
         setCombinedVisaReqs={setCombinedVisaReqs}
       />
+
       <VisaRequirementsTable combinedVisaReqs={combinedVisaReqs} />
     </div>
   );

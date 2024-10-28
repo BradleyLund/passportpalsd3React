@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Trash, Plus, Shuffle } from "lucide-react";
+import { Label, Listbox } from "@headlessui/react";
+import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 
 // List of all countries in the world
 const countries = [
@@ -399,6 +401,67 @@ const countryCodesObject = {
   Zimbabwe: "ZW",
 };
 
+// const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
+//   const addSelectBox = () => {
+//     onSelectChange(selectedCountries.length, "Afghanistan", false);
+//   };
+
+//   const removeSelectBox = (index) => {
+//     const updatedCountries = selectedCountries.filter((_, i) => i !== index);
+
+//     onSelectChange(index, updatedCountries, true);
+//   };
+
+//   const randomizeSelectBox = (index) => {
+//     let randomIndex = Math.floor(Math.random() * countries.length);
+//     let randomOption = countries[randomIndex];
+//     onSelectChange(index, randomOption, false, true);
+//   };
+
+//   return (
+//     <div className="containerColumn">
+//       {selectedCountries.map((country, index) => (
+//         <div key={index} className="container">
+//           <span
+//             className={`fi fi-${countryCodesObject[country].toLowerCase()}`}
+//             style={{ marginRight: "20px", width: "60px", height: "60px" }}
+//           ></span>
+//           {console.log(country)}
+//           <select
+//             value={country}
+//             onChange={(e) => onSelectChange(index, e.target.value)}
+//             className="button-17"
+//           >
+//             {countries.map((country, idx) => (
+//               <option key={idx} value={country}>
+//                 {country}
+//               </option>
+//             ))}
+//           </select>
+//           <button
+//             // className="button-remove"
+//             className="button-remove"
+//             onClick={() => removeSelectBox(index)}
+//           >
+//             <Trash size={24} />
+//           </button>
+//           <button
+//             className="button-remove"
+//             onClick={() => randomizeSelectBox(index)}
+//           >
+//             <Shuffle />
+//           </button>
+//         </div>
+//       ))}
+//       <button className="button-add" onClick={addSelectBox}>
+//         <Plus />
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default SelectBoxComponent;
+
 const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
   const addSelectBox = () => {
     onSelectChange(selectedCountries.length, "Afghanistan", false);
@@ -406,7 +469,6 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
 
   const removeSelectBox = (index) => {
     const updatedCountries = selectedCountries.filter((_, i) => i !== index);
-
     onSelectChange(index, updatedCountries, true);
   };
 
@@ -417,42 +479,54 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
   };
 
   return (
-    <div className="containerColumn">
-      {selectedCountries.map((country, index) => (
-        <div key={index} className="container">
-          <span
-            className={`fi fi-${countryCodesObject[country].toLowerCase()}`}
-            style={{ marginRight: "20px", width: "60px", height: "60px" }}
-          ></span>
-          {console.log(country)}
-          <select
-            value={country}
-            onChange={(e) => onSelectChange(index, e.target.value)}
-            className="button-17"
+    <div className="w-full max-w-3xl mx-auto px-4">
+      <div className="space-y-4">
+        {selectedCountries.map((country, index) => (
+          <div
+            key={index}
+            className="flex flex-col sm:flex-row items-center gap-3 p-4 bg-white rounded-lg shadow-sm"
           >
-            {countries.map((country, idx) => (
-              <option key={idx} value={country}>
-                {country}
-              </option>
-            ))}
-          </select>
-          <button
-            // className="button-remove"
-            className="button-remove"
-            onClick={() => removeSelectBox(index)}
-          >
-            <Trash size={24} />
-          </button>
-          <button
-            className="button-remove"
-            onClick={() => randomizeSelectBox(index)}
-          >
-            <Shuffle />
-          </button>
-        </div>
-      ))}
-      <button className="button-add" onClick={addSelectBox}>
-        <Plus />
+            <span
+              className={`fi fi-${countryCodesObject[
+                country
+              ].toLowerCase()} w-12 h-12 sm:w-14 sm:h-14`}
+            />
+            <select
+              value={country}
+              onChange={(e) => onSelectChange(index, e.target.value)}
+              className="w-full sm:w-auto flex-grow p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              {countries.map((country, idx) => (
+                <option key={idx} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+            <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
+              <button
+                className="p-2 text-gray-600 hover:text-red-600 transition-colors"
+                onClick={() => removeSelectBox(index)}
+                aria-label="Remove country"
+              >
+                <Trash size={20} />
+              </button>
+              <button
+                className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
+                onClick={() => randomizeSelectBox(index)}
+                aria-label="Randomize country"
+              >
+                <Shuffle size={20} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={addSelectBox}
+        className="mt-4 w-full sm:w-auto flex items-center justify-center gap-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      >
+        <Plus size={20} />
+        <span>Add Country</span>
       </button>
     </div>
   );
