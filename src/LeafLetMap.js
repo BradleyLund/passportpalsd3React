@@ -211,6 +211,7 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
   // Color scale function
   const getColor = (requirement) => {
     const colorMap = {
+      "Selected Country": "#1E40AF",
       "-1": "#1E40AF",
       "no admission": "gray",
       "covid ban": "gray",

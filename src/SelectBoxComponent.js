@@ -521,13 +521,15 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
           </div>
         ))}
       </div>
-      <button
-        onClick={addSelectBox}
-        className="mt-4 w-full sm:w-auto flex items-center justify-center gap-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-      >
-        <Plus size={20} />
-        <span>Add Country</span>
-      </button>
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={addSelectBox}
+          className="mt-4 w-full sm:w-auto flex items-center justify-center gap-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors button-17"
+        >
+          <Plus size={20} />
+          <span>Add Country</span>
+        </button>
+      </div>
     </div>
   );
 };

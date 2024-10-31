@@ -44,6 +44,7 @@ const ParentComponent = () => {
         selectedCountries={selectedCountries}
         setCombinedVisaReqs={setCombinedVisaReqs}
       /> */}
+      <br></br>
       <LeafletMap
         selectedCountries={selectedCountries}
         setCombinedVisaReqs={setCombinedVisaReqs}
