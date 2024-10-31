@@ -258,7 +258,7 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
   const processVisaData = useCallback(async () => {
     try {
       const response = await fetch(
-        "/passportpalsd3React/passport-index-tidy-iso3.csv"
+        "https://bradleylund.github.io/passportpalsd3React/passport-index-tidy-iso3.csv"
       );
       const csvData = await response.text();
       const lines = csvData.split("\n");
@@ -422,7 +422,7 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
 
       const visaReqs = await processVisaData();
       const response = await fetch(
-        "/passportpalsd3React/countries-land-10km.geo.json"
+        "https://bradleylund.github.io/passportpalsd3React/countries-land-10km.geo.json"
       );
       const geoData = await response.json();
 
