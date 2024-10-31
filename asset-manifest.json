@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/passportpalsd3React/static/css/main.9bd53a34.css",
-    "main.js": "/passportpalsd3React/static/js/main.b3196d47.js",
+    "main.js": "/passportpalsd3React/static/js/main.a08a5c53.js",
     "static/js/453.53e548cf.chunk.js": "/passportpalsd3React/static/js/453.53e548cf.chunk.js",
     "static/media/rs.svg": "/passportpalsd3React/static/media/rs.b16c22033ad1a395b009.svg",
     "static/media/sh-ac.svg": "/passportpalsd3React/static/media/sh-ac.2f733db97b52ef32314b.svg",
@@ -275,11 +275,11 @@
     "static/media/pe.svg": "/passportpalsd3React/static/media/pe.d64e9732fcaa8f765994.svg",
     "static/media/id.svg": "/passportpalsd3React/static/media/id.f624e2c8444a7794b357.svg",
     "main.9bd53a34.css.map": "/passportpalsd3React/static/css/main.9bd53a34.css.map",
-    "main.b3196d47.js.map": "/passportpalsd3React/static/js/main.b3196d47.js.map",
+    "main.a08a5c53.js.map": "/passportpalsd3React/static/js/main.a08a5c53.js.map",
     "453.53e548cf.chunk.js.map": "/passportpalsd3React/static/js/453.53e548cf.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9bd53a34.css",
-    "static/js/main.b3196d47.js"
+    "static/js/main.a08a5c53.js"
   ]
 }
