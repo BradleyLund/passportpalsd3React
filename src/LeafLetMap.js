@@ -257,9 +257,7 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
   // Process visa requirements data
   const processVisaData = useCallback(async () => {
     try {
-      const response = await fetch(
-        "https://passportpalsmap.com/passportpalsd3React/passport-index-tidy-iso3.csv"
-      );
+      const response = await fetch("passport-index-tidy-iso3.csv");
       const csvData = await response.text();
       const lines = csvData.split("\n");
       const headers = lines[0].split(",");
@@ -421,9 +419,7 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
       if (!mapInstanceRef.current) return;
 
       const visaReqs = await processVisaData();
-      const response = await fetch(
-        "https://passportpalsmap.com/passportpalsd3React/countries-land-10km.geo.json"
-      );
+      const response = await fetch("countries-land-10km.geo.json");
       const geoData = await response.json();
 
       // Remove existing layers
