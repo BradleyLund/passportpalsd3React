@@ -32,8 +32,8 @@ const ParentComponent = () => {
           PassportPals
         </h1>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          See where you and your friends from all around the world can travel to
-          together, visa free.
+          See where you and your friends from all around the world can travel
+          together. Try out the shuffle!
         </p>
       </div>
       <SelectBoxComponent
