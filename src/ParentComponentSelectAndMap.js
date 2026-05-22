@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import SelectBoxComponent from "./SelectBoxComponent";
-import ChoroplethMap from "./ChoroplethMap";
 import VisaRequirementsTable from "./VisaRequirementsTable";
 import LeafletMap from "./LeafLetMap";
 
@@ -8,21 +7,16 @@ const ParentComponent = () => {
   const [selectedCountries, setSelectedCountries] = useState(["Afghanistan"]);
   const [combinedVisaReqs, setCombinedVisaReqs] = useState({});
 
-  const handleSelectChange = (index, value, remove, randomize) => {
+  const handleSelectChange = (index, value, remove) => {
     if (remove) {
-      const updatedCountries = selectedCountries.filter((_, i) => i !== index);
-      setSelectedCountries(updatedCountries);
-    } else if (randomize) {
-      console.log("Hi in random function");
-      const updatedCountries = [...selectedCountries];
-      updatedCountries[index] = value;
-      console.log(index, value, updatedCountries, remove, randomize);
-      setSelectedCountries(updatedCountries);
-    } else {
-      const newSelectedCountries = [...selectedCountries];
-      newSelectedCountries[index] = value;
-      setSelectedCountries(newSelectedCountries);
+      setSelectedCountries((prev) => prev.filter((_, i) => i !== index));
+      return;
     }
+    setSelectedCountries((prev) => {
+      const next = [...prev];
+      next[index] = value;
+      return next;
+    });
   };
 
   return (
@@ -40,16 +34,11 @@ const ParentComponent = () => {
         selectedCountries={selectedCountries}
         onSelectChange={handleSelectChange}
       />
-      {/* <ChoroplethMap
-        selectedCountries={selectedCountries}
-        setCombinedVisaReqs={setCombinedVisaReqs}
-      /> */}
-      <br></br>
+      <br />
       <LeafletMap
         selectedCountries={selectedCountries}
         setCombinedVisaReqs={setCombinedVisaReqs}
       />
-
       <VisaRequirementsTable combinedVisaReqs={combinedVisaReqs} />
     </div>
   );
