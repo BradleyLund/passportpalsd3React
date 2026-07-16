@@ -31,14 +31,10 @@ const VisaRequirementsTable = ({ combinedVisaReqs }) => {
       const name = ISO3_TO_COUNTRY[iso3];
       const iso2 = name ? COUNTRY_TO_ISO2[name] : null;
       return (
-        <tr key={iso3} className="border-b border-gray-200 last:border-0">
-          <td className="px-4 py-2">
-            {iso2 && (
-              <span className={`fi fi-${iso2.toLowerCase()}`}></span>
-            )}
-            {" " + (name || iso3)}
-          </td>
-        </tr>
+        <div key={iso3} className="px-4 py-2">
+          {iso2 && <span className={`fi fi-${iso2.toLowerCase()}`}></span>}
+          {" " + (name || iso3)}
+        </div>
       );
     });
 
