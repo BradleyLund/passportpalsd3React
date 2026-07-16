@@ -5,7 +5,25 @@ module.exports = {
     "./public/index.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        paper: "#fbfaf8",
+        ink: {
+          DEFAULT: "#1a1918",
+          secondary: "#52514c",
+          muted: "#6f6d66",
+        },
+        hairline: "#e4e2db",
+        navy: {
+          DEFAULT: "#1f3a5f",
+          soft: "#eef2f7",
+        },
+      },
+      fontFamily: {
+        sans: ["'Public Sans'", "system-ui", "-apple-system", "sans-serif"],
+        mono: ["'IBM Plex Mono'", "ui-monospace", "Consolas", "monospace"],
+      },
+    },
   },
   plugins: [],
 };

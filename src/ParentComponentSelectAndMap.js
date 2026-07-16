@@ -50,50 +50,63 @@ const ParentComponent = () => {
     });
   };
 
+  const mrz = `P<${selectedCountries
+    .map((country) => COUNTRY_TO_ISO3[country])
+    .join("<")}<<WHERE<CAN<WE<ALL<GO`
+    .padEnd(64, "<")
+    .slice(0, 64);
+
   return (
-    <div className="containerPage">
-      <div className="text-center space-y-4 mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent py-2">
-          PassportPals
-        </h1>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          See where you and your friends from all around the world can travel
-          together. Try out the shuffle!
+    <div className="max-w-[1100px] mx-auto px-5 py-10">
+      <header className="mb-7">
+        <p className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-navy mb-2">
+          Passport Pals
         </p>
-      </div>
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight max-w-[24ch] mb-2">
+          Where can we all go together?
+        </h1>
+        <p className="text-ink-secondary max-w-[58ch]">
+          Pick everyone's passports below. Each country is coloured by the
+          toughest visa requirement anyone in your group would face — blue
+          means you can all just go, red means someone needs a visa. Try out
+          the shuffle!
+        </p>
+        <p className="mrz mt-6" aria-hidden="true">
+          {mrz}
+        </p>
+      </header>
       <SelectBoxComponent
         selectedCountries={selectedCountries}
         onSelectChange={handleSelectChange}
       />
-      <br />
       <LeafletMap
         selectedCountries={selectedCountries}
         setCombinedVisaReqs={setCombinedVisaReqs}
       />
       <VisaRequirementsTable combinedVisaReqs={combinedVisaReqs} />
-      <footer className="mt-8 pt-4 border-t border-gray-200 text-sm text-gray-500 text-center max-w-3xl mx-auto space-y-1">
-        <p>
+      <footer className="mt-6 pt-4 border-t border-hairline text-[0.82rem] text-ink-muted space-y-1">
+        <p className="max-w-[72ch]">
           Visa requirement data from{" "}
           <a
-            className="text-blue-700 underline"
+            className="text-navy underline"
             href="https://github.com/imorte/passport-index-data"
           >
             imorte/passport-index-data
           </a>{" "}
           (a maintained fork of{" "}
           <a
-            className="text-blue-700 underline"
+            className="text-navy underline"
             href="https://github.com/ilyankou/passport-index-dataset"
           >
             ilyankou/passport-index-dataset
           </a>
           , both sourced from{" "}
-          <a className="text-blue-700 underline" href="https://www.passportindex.org/">
+          <a className="text-navy underline" href="https://www.passportindex.org/">
             Passport Index
           </a>
           ){dataLastUpdated ? `. Data last updated: ${dataLastUpdated}` : ""}.
         </p>
-        <p>
+        <p className="max-w-[72ch]">
           Always double-check entry requirements with official sources before
           booking — this map is a planning aid, not travel advice.
         </p>

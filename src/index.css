@@ -2,249 +2,121 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------------------
+   Passport Pals — document/paper identity
+   Type: Public Sans (body & display) + IBM Plex Mono (labels, data, MRZ)
+   --------------------------------------------------------------------------- */
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  background: #fbfaf8;
+  color: #1a1918;
+  font-family: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* height: 100vh; */
-  margin: 0;
-}
-
-svg {
-  border: #3c4043;
-}
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* flex-direction: column; */
-  /* border: 1px solid black; */
-  padding: 5px;
-}
-
-.resultsTable {
-  display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
-}
-
-.containerColumn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  /* border: 1px solid black; */
-  padding: 20px;
-}
-
-.containerPage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  /* border: 1px solid black; */
-  padding: 20px;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
 }
 
-.button-17 {
-  align-items: center;
-  appearance: none;
-  background-color: #fff;
-  border-radius: 24px;
-  border-style: none;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
-    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
-  box-sizing: border-box;
-  color: #3c4043;
-  cursor: pointer;
-  /* display: inline-flex; */
-  fill: currentcolor;
-  font-family: "Google Sans", Roboto, Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  height: 48px;
-  justify-content: center;
-  letter-spacing: 0.25px;
-  line-height: normal;
-  max-width: 50%;
-  /* margin-top: 20px; */
-  overflow: visible;
-  /* padding: 2px 24px; */
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: 250px;
-  will-change: transform, opacity;
-  z-index: 0;
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid #1f3a5f;
+  outline-offset: 2px;
 }
 
-.button-17:hover {
-  background: #f6f9fe;
-  color: #174ea6;
+/* The machine-readable-zone strip — rewrites itself with the chosen passports */
+.mrz {
+  padding: 0.45rem 0;
+  border-top: 1px solid #e4e2db;
+  border-bottom: 1px solid #e4e2db;
+  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  color: #6f6d66;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.button-17:active {
-  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%),
-    0 8px 12px 6px rgb(60 64 67 / 15%);
-  outline: none;
-}
-
-.button-17:focus {
-  outline: none;
-  border: 2px solid #4285f4;
-}
-
-.button-remove {
-  align-items: center;
-  appearance: none;
-  background-color: #fff;
-  border-radius: 24px;
-  border-style: none;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
-    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
-  box-sizing: border-box;
-  color: #3c4043;
-  cursor: pointer;
-  display: inline-flex;
-  fill: currentcolor;
-  font-family: "Google Sans", Roboto, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  height: 48px;
-  justify-content: center;
-  letter-spacing: 0.25px;
-  line-height: normal;
-  max-width: 100%;
-  /* margin-top: 20px; */
-  /* margin: 20px; */
-  margin-left: 20px;
-  overflow: visible;
-  padding: 2px 24px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: 70px;
-  will-change: transform, opacity;
-  z-index: 0;
-}
-
-.button-remove:hover {
-  background: #f6f9fe;
-  color: #174ea6;
-}
-
-.button-remove:active {
-  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%),
-    0 8px 12px 6px rgb(60 64 67 / 15%);
-  outline: none;
-}
-
-.button-remove:focus {
-  outline: none;
-  border: 2px solid #4285f4;
-}
-
-.button-add {
-  align-items: center;
-  appearance: none;
-  background-color: #fff;
-  border-radius: 24px;
-  border-style: none;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
-    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
-  box-sizing: border-box;
-  color: #3c4043;
-  cursor: pointer;
-  display: inline-flex;
-  fill: currentcolor;
-  font-family: "Google Sans", Roboto, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  height: 48px;
-  justify-content: center;
-  letter-spacing: 0.25px;
-  line-height: normal;
-  max-width: 100%;
-  /* margin-top: 20px; */
-  /* margin: 20px; */
-  margin-left: 20px;
-  overflow: visible;
-  padding: 2px 24px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: 70px;
-  will-change: transform, opacity;
-  z-index: 0;
-}
-
-.button-add:hover {
-  background: #f6f9fe;
-  color: #174ea6;
-}
-
-.button-add:active {
-  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%),
-    0 8px 12px 6px rgb(60 64 67 / 15%);
-  outline: none;
-}
-
-.button-add:focus {
-  outline: none;
-  border: 2px solid #4285f4;
-}
-
-.info {
-  padding: 6px 8px;
-  font: 14px/16px Arial, Helvetica, sans-serif;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-}
+/* ----- leaflet legend control ----- */
 
 .legend {
-  background: rgba(255, 255, 255, 0.8);
-  padding: 6px 8px;
-  border-radius: 5px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  border: 1px solid #e4e2db;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(20, 19, 18, 0.08);
+  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: #52514c;
 }
 
 .legend i {
-  width: 18px;
-  height: 18px;
+  width: 13px;
+  height: 13px;
   float: left;
-  margin-right: 8px;
-  opacity: 0.7;
+  margin: 3px 8px 0 0;
+  border-radius: 3px;
 }
 
 .legend h4 {
-  margin: 0 0 5px;
-  color: #777;
+  margin: 0 0 4px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6f6d66;
+}
+
+/* ----- cursor-following map tooltip ----- */
+
+.map-tooltip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  max-width: 20rem;
+  background: #1a1918;
+  color: #f6f5f2;
+  border-radius: 6px;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  text-align: left;
+  box-shadow: 0 4px 14px rgba(20, 19, 18, 0.25);
+}
+
+.map-tooltip h3 {
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.map-tooltip table {
+  border-collapse: collapse;
+}
+
+.map-tooltip td {
+  padding: 0.05rem 0;
+  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  font-size: 0.72rem;
+  color: #d9d7d0;
+}
+
+.map-tooltip td:first-child {
+  padding-right: 0.8rem;
+  color: #a5a39a;
+}
+
+.map-tooltip .verdict {
+  margin: 0.3rem 0 0;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }

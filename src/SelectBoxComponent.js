@@ -18,24 +18,28 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4">
-      <div className="space-y-4">
+    <section className="my-7" aria-label="Passports in your group">
+      <span className="block font-mono text-[0.72rem] font-medium tracking-[0.18em] uppercase text-ink-muted mb-2.5">
+        Passports in your group
+      </span>
+      <div className="flex flex-wrap items-center gap-2.5">
         {selectedCountries.map((country, index) => {
           const iso2 = COUNTRY_TO_ISO2[country];
           return (
             <div
               key={index}
-              className="flex flex-col sm:flex-row items-center gap-3 p-4 bg-white rounded-lg shadow-sm"
+              className="inline-flex items-center bg-white border border-hairline border-l-4 border-l-navy rounded-md"
             >
               {iso2 && (
                 <span
-                  className={`fi fi-${iso2.toLowerCase()} w-12 h-12 sm:w-14 sm:h-14`}
+                  className={`fi fi-${iso2.toLowerCase()} ml-2.5 rounded-[2px]`}
                 />
               )}
               <select
                 value={country}
                 onChange={(e) => onSelectChange(index, e.target.value)}
-                className="w-full sm:w-auto flex-grow p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                aria-label={`Passport ${index + 1}`}
+                className="font-mono text-sm text-ink bg-transparent py-2 pl-2 pr-1 max-w-[13rem] cursor-pointer"
               >
                 {COUNTRIES.map((c) => (
                   <option key={c} value={c}>
@@ -43,36 +47,37 @@ const SelectBoxComponent = ({ selectedCountries, onSelectChange }) => {
                   </option>
                 ))}
               </select>
-              <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
+              <button
+                className="p-2 border-l border-hairline text-ink-muted hover:text-navy hover:bg-navy-soft transition-colors"
+                onClick={() => randomizeSelectBox(index)}
+                aria-label={`Shuffle passport ${index + 1}`}
+                type="button"
+              >
+                <Shuffle size={15} />
+              </button>
+              {selectedCountries.length > 1 && (
                 <button
-                  className="p-2 text-gray-600 hover:text-red-600 transition-colors"
+                  className="p-2 border-l border-hairline rounded-r-md text-ink-muted hover:text-[#d03b3b] hover:bg-red-50 transition-colors"
                   onClick={() => removeSelectBox(index)}
-                  aria-label="Remove country"
+                  aria-label={`Remove ${country} passport`}
+                  type="button"
                 >
-                  <Trash size={20} />
+                  <Trash size={15} />
                 </button>
-                <button
-                  className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
-                  onClick={() => randomizeSelectBox(index)}
-                  aria-label="Randomize country"
-                >
-                  <Shuffle size={20} />
-                </button>
-              </div>
+              )}
             </div>
           );
         })}
-      </div>
-      <div className="flex justify-center mt-4">
         <button
           onClick={addSelectBox}
-          className="mt-4 w-full sm:w-auto flex items-center justify-center gap-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors button-17"
+          type="button"
+          className="inline-flex items-center gap-1.5 border border-dashed border-navy rounded-md px-3.5 py-2 font-mono text-[0.8rem] text-navy hover:bg-navy-soft transition-colors"
         >
-          <Plus size={20} />
-          <span>Add Country</span>
+          <Plus size={15} />
+          <span>Add a passport</span>
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 
