@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectBoxComponent from "./SelectBoxComponent";
 import VisaRequirementsTable from "./VisaRequirementsTable";
 import LeafletMap from "./LeafLetMap";
@@ -6,6 +6,16 @@ import LeafletMap from "./LeafLetMap";
 const ParentComponent = () => {
   const [selectedCountries, setSelectedCountries] = useState(["Afghanistan"]);
   const [combinedVisaReqs, setCombinedVisaReqs] = useState({});
+  const [dataLastUpdated, setDataLastUpdated] = useState(null);
+
+  useEffect(() => {
+    fetch("data-meta.json")
+      .then((response) => response.json())
+      .then((meta) => setDataLastUpdated(meta.lastUpdated))
+      .catch((error) =>
+        console.error("Error fetching data metadata:", error)
+      );
+  }, []);
 
   const handleSelectChange = (index, value, remove) => {
     if (remove) {
@@ -40,6 +50,33 @@ const ParentComponent = () => {
         setCombinedVisaReqs={setCombinedVisaReqs}
       />
       <VisaRequirementsTable combinedVisaReqs={combinedVisaReqs} />
+      <footer className="mt-8 pt-4 border-t border-gray-200 text-sm text-gray-500 text-center max-w-3xl mx-auto space-y-1">
+        <p>
+          Visa requirement data from{" "}
+          <a
+            className="text-blue-700 underline"
+            href="https://github.com/imorte/passport-index-data"
+          >
+            imorte/passport-index-data
+          </a>{" "}
+          (a maintained fork of{" "}
+          <a
+            className="text-blue-700 underline"
+            href="https://github.com/ilyankou/passport-index-dataset"
+          >
+            ilyankou/passport-index-dataset
+          </a>
+          , both sourced from{" "}
+          <a className="text-blue-700 underline" href="https://www.passportindex.org/">
+            Passport Index
+          </a>
+          ){dataLastUpdated ? `. Data last updated: ${dataLastUpdated}` : ""}.
+        </p>
+        <p>
+          Always double-check entry requirements with official sources before
+          booking — this map is a planning aid, not travel advice.
+        </p>
+      </footer>
     </div>
   );
 };

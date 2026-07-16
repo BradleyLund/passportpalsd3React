@@ -1,5 +1,9 @@
 import React from "react";
-import { COUNTRY_TO_ISO2, ISO3_TO_COUNTRY } from "./constants/countries";
+import {
+  COUNTRY_TO_ISO2,
+  ISO3_TO_COUNTRY,
+  isDayLimited,
+} from "./constants/countries";
 
 const VisaRequirementsTable = ({ combinedVisaReqs }) => {
   const entries = Object.entries(combinedVisaReqs);
@@ -10,13 +14,17 @@ const VisaRequirementsTable = ({ combinedVisaReqs }) => {
   const eVisaCountries = entries.filter(
     ([, requirement]) => requirement === "e-visa"
   );
+  const etaCountries = entries.filter(
+    ([, requirement]) => requirement === "eta"
+  );
   const visaOnArrivalCountries = entries.filter(
     ([, requirement]) => requirement === "visa on arrival"
   );
-  const visaFreeCountries = entries.filter(([, requirement]) => {
-    const number = parseInt(requirement, 10);
-    return !isNaN(number) && number > 0;
-  });
+  // Unlimited "visa free" and day-limited stays ("90", "360", ...) both count.
+  const visaFreeCountries = entries.filter(
+    ([, requirement]) =>
+      requirement === "visa free" || isDayLimited(requirement)
+  );
 
   const renderCountryRows = (countries) =>
     countries.map(([iso3]) => {
@@ -37,8 +45,8 @@ const VisaRequirementsTable = ({ combinedVisaReqs }) => {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-          <div className="border-b md:border-r lg:border-r border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5">
+          <div className="border-b md:border-r border-gray-200">
             <div className="bg-blue-50 px-6 py-3">
               <h2 className="font-semibold text-lg text-blue-800">
                 Pals Passports
@@ -60,16 +68,7 @@ const VisaRequirementsTable = ({ combinedVisaReqs }) => {
             </div>
           </div>
 
-          <div className="border-b md:border-r lg:border-b-0 border-gray-200">
-            <div className="bg-purple-50 px-6 py-3">
-              <h2 className="font-semibold text-lg text-purple-800">eVisa</h2>
-            </div>
-            <div className="divide-y divide-gray-200">
-              {renderCountryRows(eVisaCountries)}
-            </div>
-          </div>
-
-          <div>
+          <div className="border-b md:border-r border-gray-200">
             <div className="bg-amber-50 px-6 py-3">
               <h2 className="font-semibold text-lg text-amber-800">
                 Visa On Arrival
@@ -77,6 +76,24 @@ const VisaRequirementsTable = ({ combinedVisaReqs }) => {
             </div>
             <div className="divide-y divide-gray-200">
               {renderCountryRows(visaOnArrivalCountries)}
+            </div>
+          </div>
+
+          <div className="border-b lg:border-r lg:border-b-0 border-gray-200">
+            <div className="bg-teal-50 px-6 py-3">
+              <h2 className="font-semibold text-lg text-teal-800">eTA</h2>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {renderCountryRows(etaCountries)}
+            </div>
+          </div>
+
+          <div>
+            <div className="bg-purple-50 px-6 py-3">
+              <h2 className="font-semibold text-lg text-purple-800">eVisa</h2>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {renderCountryRows(eVisaCountries)}
             </div>
           </div>
         </div>
