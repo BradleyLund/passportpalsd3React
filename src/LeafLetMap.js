@@ -76,7 +76,7 @@ const parseVisaCsv = (csvText) => {
 const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
-  const infoRef = useRef(null);
+  const tooltipRef = useRef(null);
   const visaDataRef = useRef(null);
   const geoDataRef = useRef(null);
 
@@ -108,15 +108,6 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
       touchZoom: true,
       zoomControl: true,
     });
-
-    const info = L.control();
-    info.onAdd = function () {
-      this._div = L.DomUtil.create("div", "info");
-      this._div.innerHTML = "Hover over a country";
-      infoRef.current = this._div;
-      return this._div;
-    };
-    info.addTo(mapInstanceRef.current);
 
     const legend = L.control({ position: "bottomright" });
     legend.onAdd = function () {
@@ -168,51 +159,59 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
         }
       });
 
+      const moveTooltip = (e) => {
+        const tooltip = tooltipRef.current;
+        if (!tooltip || tooltip.hidden) return;
+        const pad = 14;
+        const box = tooltip.getBoundingClientRect();
+        let x = e.originalEvent.clientX + pad;
+        let y = e.originalEvent.clientY + pad;
+        if (x + box.width > window.innerWidth - pad) {
+          x = e.originalEvent.clientX - box.width - pad;
+        }
+        if (y + box.height > window.innerHeight - pad) {
+          y = e.originalEvent.clientY - box.height - pad;
+        }
+        tooltip.style.left = `${x}px`;
+        tooltip.style.top = `${y}px`;
+      };
+
       L.geoJSON(geoData, {
         style: (feature) => ({
           fillColor: getColor(visaReqs[feature.properties.A3]),
           weight: 1,
           opacity: 1,
           color: "white",
-          fillOpacity: 0.7,
+          fillOpacity: 1,
         }),
         onEachFeature: (feature, layer) => {
           layer.on({
             mouseover: (e) => {
-              e.target.setStyle({
-                weight: 2,
-                color: "#666",
-                fillOpacity: 0.9,
-              });
+              e.target.setStyle({ weight: 1.5, color: "#1a1918" });
               e.target.bringToFront();
-              if (infoRef.current) {
+              const tooltip = tooltipRef.current;
+              if (tooltip) {
                 const iso3 = feature.properties.A3;
                 const rows = selectedCountries
                   .map((country) => {
                     const passport = visaByPassport[COUNTRY_TO_ISO3[country]];
                     const requirement = passport && passport[iso3];
-                    return `${country}: ${formatRequirement(requirement)}`;
+                    return `<tr><td>${country}</td><td>${formatRequirement(requirement)}</td></tr>`;
                   })
-                  .join("<br/>");
+                  .join("");
                 const together =
                   selectedCountries.length > 1
-                    ? `<br/><strong>Together: ${formatRequirement(visaReqs[iso3])}</strong>`
+                    ? `<p class="verdict">Together: ${formatRequirement(visaReqs[iso3])}</p>`
                     : "";
-                infoRef.current.innerHTML = `
-                  <strong>${ISO3_TO_COUNTRY[iso3] || iso3}</strong><br/>
-                  ${rows}${together}
-                `;
+                tooltip.innerHTML = `<h3>${ISO3_TO_COUNTRY[iso3] || iso3}</h3><table><tbody>${rows}</tbody></table>${together}`;
+                tooltip.hidden = false;
+                moveTooltip(e);
               }
             },
+            mousemove: moveTooltip,
             mouseout: (e) => {
-              e.target.setStyle({
-                weight: 1,
-                color: "white",
-                fillOpacity: 0.7,
-              });
-              if (infoRef.current) {
-                infoRef.current.innerHTML = "Hover over a country";
-              }
+              e.target.setStyle({ weight: 1, color: "white" });
+              if (tooltipRef.current) tooltipRef.current.hidden = true;
             },
             click: (e) => {
               mapInstanceRef.current.fitBounds(e.target.getBounds());
@@ -232,19 +231,18 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
   }, [selectedCountries, setCombinedVisaReqs, loadVisaData, loadGeoData]);
 
   return (
-    <div className="relative w-full">
+    <figure className="m-0 w-full border border-hairline rounded-[10px] bg-white p-2">
       <div
         ref={mapRef}
-        className="w-full"
+        className="w-full rounded-md"
         style={{
           height: "500px",
           minHeight: "250px",
-          maxWidth: "1200px",
-          margin: "0 auto",
           zIndex: 1,
         }}
       />
-    </div>
+      <div ref={tooltipRef} className="map-tooltip" hidden />
+    </figure>
   );
 };
 
