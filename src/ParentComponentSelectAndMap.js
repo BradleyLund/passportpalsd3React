@@ -2,11 +2,32 @@ import React, { useEffect, useState } from "react";
 import SelectBoxComponent from "./SelectBoxComponent";
 import VisaRequirementsTable from "./VisaRequirementsTable";
 import LeafletMap from "./LeafLetMap";
+import { COUNTRY_TO_ISO3, ISO3_TO_COUNTRY } from "./constants/countries";
+
+// Selection is shareable via the query string, e.g. ?p=USA,ZAF
+const countriesFromUrl = () => {
+  const codes = new URLSearchParams(window.location.search).get("p");
+  if (!codes) return null;
+  const names = codes
+    .split(",")
+    .map((code) => ISO3_TO_COUNTRY[code])
+    .filter(Boolean);
+  return names.length > 0 ? names : null;
+};
 
 const ParentComponent = () => {
-  const [selectedCountries, setSelectedCountries] = useState(["Afghanistan"]);
+  const [selectedCountries, setSelectedCountries] = useState(
+    () => countriesFromUrl() || ["Afghanistan"]
+  );
   const [combinedVisaReqs, setCombinedVisaReqs] = useState({});
   const [dataLastUpdated, setDataLastUpdated] = useState(null);
+
+  useEffect(() => {
+    const codes = selectedCountries
+      .map((country) => COUNTRY_TO_ISO3[country])
+      .join(",");
+    window.history.replaceState(null, "", `?p=${codes}`);
+  }, [selectedCountries]);
 
   useEffect(() => {
     fetch("data-meta.json")
