@@ -214,31 +214,43 @@ export const ISO3_TO_COUNTRY = Object.fromEntries(
   Object.entries(COUNTRY_DATA).map(([name, { iso3 }]) => [iso3, name])
 );
 
-// Visa requirements ordered from most-restrictive to least, used to combine
-// requirements across multiple passports (worst wins).
-export const VISA_REQUIREMENTS_PRIORITY = [
-  "Selected Country",
-  null,
-  "no admission",
-  "covid ban",
-  "visa required",
-  "e-visa",
-  "visa on arrival",
-  "7",
-  "10",
-  "14",
-  "15",
-  "21",
-  "28",
-  "30",
-  "31",
-  "42",
-  "45",
-  "60",
-  "90",
-  "120",
-  "180",
-  "240",
-  "360",
-  "visa free",
-];
+// A day-limited visa-free stay is any all-digit requirement value ("7",
+// "90", "360", ...). They rank between "visa on arrival" and "visa free",
+// ordered by day count, without needing every possible value listed.
+export const isDayLimited = (requirement) => /^\d+$/.test(requirement || "");
+
+const CATEGORY_RANK = {
+  "-1": 0, // a passport's own country — kept first so it shows as "selected"
+  "Selected Country": 0,
+  "no admission": 1000,
+  "visa required": 2000,
+  "e-visa": 3000,
+  eta: 4000,
+  "visa on arrival": 5000,
+  "visa free": 7000,
+};
+
+// Lower rank = more restrictive; used to combine requirements across
+// multiple passports (worst wins). Unknown values never override a known one.
+export const visaRank = (requirement) => {
+  if (isDayLimited(requirement)) return 6000 + Number(requirement);
+  const rank = CATEGORY_RANK[requirement];
+  return rank === undefined ? Infinity : rank;
+};
+
+// Human-friendly wording for info panels and tables.
+export const formatRequirement = (requirement) => {
+  const labels = {
+    "-1": "Home passport",
+    "Selected Country": "Home passport",
+    "no admission": "No admission",
+    "visa required": "Visa required",
+    "e-visa": "E-visa",
+    eta: "eTA",
+    "visa on arrival": "Visa on arrival",
+    "visa free": "Visa free",
+  };
+  if (requirement === undefined || requirement === null) return "No data";
+  if (isDayLimited(requirement)) return `Visa free · ${requirement}-day stay`;
+  return labels[requirement] || requirement;
+};

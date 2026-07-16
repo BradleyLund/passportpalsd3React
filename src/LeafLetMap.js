@@ -4,43 +4,51 @@ import "leaflet/dist/leaflet.css";
 import {
   COUNTRY_TO_ISO3,
   ISO3_TO_COUNTRY,
-  VISA_REQUIREMENTS_PRIORITY,
+  formatRequirement,
+  isDayLimited,
+  visaRank,
 } from "./constants/countries";
 
-const VISA_FREE_DAY_VALUES = new Set([
-  "7", "10", "14", "15", "21", "28", "30",
-  "31", "42", "45", "60", "90", "120", "180", "240", "360",
-]);
+// Diverging red/blue scale (colourblind-safe; worst adjacent CVD deltaE
+// 15.3): red shades mean someone needs a visa, blue shades mean the whole
+// group can just go. Amber marks the group's own passports; grey is no data.
+const NO_DATA_COLOR = "#d9d7d0";
 
 const getColor = (requirement) => {
   const colorMap = {
-    "Selected Country": "#1E40AF",
-    "-1": "#1E40AF",
-    "no admission": "gray",
-    "covid ban": "gray",
-    "visa required": "#C0C0C0",
-    "e-visa": "#61C7A1",
-    "visa on arrival": "#B5E61D",
-    "visa free": "#22B14C",
+    "Selected Country": "#eda100",
+    "-1": "#eda100",
+    "no admission": "#8c2323",
+    "visa required": "#d03b3b",
+    "e-visa": "#e98d8b",
+    eta: "#86b6ef",
+    "visa on arrival": "#5598e7",
+    "visa free": "#0d366b",
   };
 
-  if (VISA_FREE_DAY_VALUES.has(requirement)) {
-    return Number(requirement) <= 30 ? "#BAFFAA" : "#9EFF9E";
-  }
+  if (isDayLimited(requirement)) return "#256abf";
 
-  return colorMap[requirement] || "#C0C0C0";
+  return colorMap[requirement] || NO_DATA_COLOR;
 };
+
+const LEGEND_ENTRIES = [
+  ["Selected Country", "Your passports"],
+  ["no admission", "No admission"],
+  ["visa required", "Visa required"],
+  ["e-visa", "E-visa"],
+  ["eta", "eTA"],
+  ["visa on arrival", "Visa on arrival"],
+  ["90", "Visa free (limited stay)"],
+  ["visa free", "Visa free"],
+  [undefined, "No data"],
+];
 
 const combineVisaRequirements = (passportObjects) => {
   const result = {};
   passportObjects.forEach((obj) => {
     if (!obj) return;
     for (const key in obj) {
-      if (
-        !result[key] ||
-        VISA_REQUIREMENTS_PRIORITY.indexOf(obj[key]) <
-          VISA_REQUIREMENTS_PRIORITY.indexOf(result[key])
-      ) {
+      if (!result[key] || visaRank(obj[key]) < visaRank(result[key])) {
         result[key] = obj[key];
       }
     }
@@ -49,7 +57,7 @@ const combineVisaRequirements = (passportObjects) => {
 };
 
 const parseVisaCsv = (csvText) => {
-  const lines = csvText.split("\n");
+  const lines = csvText.trim().split(/\r?\n/);
   const headers = lines[0].split(",");
   const byPassport = {};
   for (let i = 1; i < lines.length; i++) {
@@ -113,30 +121,18 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
     const legend = L.control({ position: "bottomright" });
     legend.onAdd = function () {
       const div = L.DomUtil.create("div", "legend");
-      const requirements = [
-        "Selected Country",
-        "visa free",
-        "90",
-        "30",
-        "visa on arrival",
-        "e-visa",
-        "visa required",
-        "no admission",
-      ];
       div.innerHTML =
         "<h4>Visa Requirements</h4>" +
-        requirements
-          .map(
-            (req) =>
-              `<i style="background:${getColor(req)}"></i>${req}<br>`
-          )
-          .join("");
+        LEGEND_ENTRIES.map(
+          ([req, label]) =>
+            `<i style="background:${getColor(req)}"></i>${label}<br>`
+        ).join("");
       return div;
     };
     legend.addTo(mapInstanceRef.current);
 
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
+      "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
       { attribution: "©OpenStreetMap, ©CartoDB" }
     ).addTo(mapInstanceRef.current);
 
@@ -191,9 +187,20 @@ const LeafletMap = ({ selectedCountries, setCombinedVisaReqs }) => {
               e.target.bringToFront();
               if (infoRef.current) {
                 const iso3 = feature.properties.A3;
+                const rows = selectedCountries
+                  .map((country) => {
+                    const passport = visaByPassport[COUNTRY_TO_ISO3[country]];
+                    const requirement = passport && passport[iso3];
+                    return `${country}: ${formatRequirement(requirement)}`;
+                  })
+                  .join("<br/>");
+                const together =
+                  selectedCountries.length > 1
+                    ? `<br/><strong>Together: ${formatRequirement(visaReqs[iso3])}</strong>`
+                    : "";
                 infoRef.current.innerHTML = `
                   <strong>${ISO3_TO_COUNTRY[iso3] || iso3}</strong><br/>
-                  Requirement: ${visaReqs[iso3] || "N/A"}
+                  ${rows}${together}
                 `;
               }
             },
